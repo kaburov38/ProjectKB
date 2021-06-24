@@ -7,7 +7,7 @@ public class Animal : MonoBehaviour
 {
     
     // Start is called before the first frame update
-    public float hunger = 0.0f;
+    protected float hunger = 0.0f;
     protected float thirst = 0.0f;
     protected NavMeshAgent agent;
     protected Vector3 destination;
@@ -16,7 +16,7 @@ public class Animal : MonoBehaviour
     protected bool afterDrink = false;
     protected bool afterEat = false;
     protected float peeBar;
-    public float poopBar;
+    protected float poopBar;
     protected bool isSleeping;
     protected DayNightCycle DayNightScript;
     protected WorldController WorldControllerScript;
@@ -45,6 +45,10 @@ public class Animal : MonoBehaviour
         poopRate = 1.0f / poopTime;
     }
 
+    public int getState()
+    {
+        return state;
+    }
     protected virtual void WalkAround()
     {
         agent.SetDestination(destination);
@@ -56,6 +60,7 @@ public class Animal : MonoBehaviour
         if(thirst >= 0.75f)
         {
             water = WorldControllerScript.FindClosestWater(transform.position);
+            water.GetComponent<DrinkingStation>().isAvailable = false;
             state = State.Thirst;
         }
         if(peeBar >= 1.0f)
@@ -89,6 +94,7 @@ public class Animal : MonoBehaviour
         }
         if (drinkClock >= drinkDuration)
         {
+            water.GetComponent<DrinkingStation>().isAvailable = true;
             thirst = 0.0f;
             drinkClock = 0.0f;
             afterDrink = true;

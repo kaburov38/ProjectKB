@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Herbivore : Animal
 {
-    private GameObject grass;
+    protected GameObject grass;
+
 
     protected void Eat()
     {
@@ -15,6 +16,7 @@ public class Herbivore : Animal
         }
         if (eatClock >= eatDuration)
         {
+            grass.GetComponent<DrinkingStation>().isAvailable = true;
             hunger = 0.0f;
             eatClock = 0.0f;
             afterEat = true;
@@ -22,12 +24,17 @@ public class Herbivore : Animal
         }
     }
 
+    public virtual void chased(GameObject _predator)
+    {
+
+    }
     protected override void WalkAround()
     {
         base.WalkAround();
         if(hunger >= 0.8f)
         {
             grass = WorldControllerScript.FindClosestGrass(transform.position);
+            grass.GetComponent<DrinkingStation>().isAvailable = false;
             state = State.Eat;
         }
     }
