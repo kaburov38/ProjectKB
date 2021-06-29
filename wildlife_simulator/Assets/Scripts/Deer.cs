@@ -7,8 +7,8 @@ public class Deer : Herbivore
 {
     private float RunDistance = 10.0f;
     private bool isRunning = false;
-    private float minRunningSpeed = 6.0f;
-    private float maxRunningSpeed = 4.0f;
+    private float minRunningSpeed = 4.0f;
+    private float maxRunningSpeed = 6.0f;
 
     protected GameObject predator;
     // Start is called before the first frame update
@@ -16,7 +16,10 @@ public class Deer : Herbivore
     {
         base.Initialize();
     }
-
+    private void Awake()
+    {
+        base.Initialize();
+    }
     void Run()
     {
         float distance = Vector3.Distance(transform.position, predator.transform.position);
@@ -44,6 +47,7 @@ public class Deer : Herbivore
 
     public override void chased(GameObject _predator)
     {
+        base.chased(_predator);
         predator = _predator;
         state = State.Run;
     }

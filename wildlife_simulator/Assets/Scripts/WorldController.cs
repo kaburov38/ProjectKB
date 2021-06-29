@@ -4,18 +4,80 @@ using UnityEngine;
 
 public class WorldController : MonoBehaviour
 {
+    public GameObject deer;
+    public GameObject bison;
+    public GameObject hyena;
+    private int drinking_station;
+    private int grass;
+    private float clock = 0.0f;
     // Start is called before the first frame update
     void Start()
     {
-        
+        drinking_station = GameObject.FindGameObjectsWithTag("water").Length;
+        grass = GameObject.FindGameObjectsWithTag("grass").Length;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        clock += Time.deltaTime;
+        int bison = GameObject.FindGameObjectsWithTag("bison").Length;
+        int deer = GameObject.FindGameObjectsWithTag("deer").Length;
+        int hyena = GameObject.FindGameObjectsWithTag("hyena").Length;
+        if (clock >= 20.0f && bison+deer+hyena+1 <= drinking_station - 3 && bison+deer <= grass - 3)
+        {
+            if(deer <= hyena || deer + bison <= hyena + 1)
+            {
+                respawnHerbivore();
+                clock = 0.0f;
+            }
+            else
+            {
+                respawn();
+                clock = 0.0f;
+            }
+        }
     }
-
+    public void respawn()
+    {
+        int count = Random.Range(0, 3);
+        for(int i = 0;i < count;i++)
+        {
+            int type = Random.Range(0, 5);
+            float x = Random.Range(-50.0f, 50.0f);
+            float z = Random.Range(-50.0f, 20.0f);
+            if(type <= 2)
+            {
+                Instantiate(deer, new Vector3(x, 1.0f, z), Quaternion.identity);
+            }
+            else if(type <= 3)
+            {
+                Instantiate(bison, new Vector3(x, 1.0f, z), Quaternion.identity);
+            }
+            else
+            {
+                Instantiate(hyena, new Vector3(x, 1.0f, z), Quaternion.identity);
+            }
+        }
+    }
+    public void respawnHerbivore()
+    {
+        int count = Random.Range(0, 3);
+        for (int i = 0; i < count; i++)
+        {
+            int type = Random.Range(0, 3);
+            float x = Random.Range(-50.0f, 50.0f);
+            float z = Random.Range(-50.0f, 20.0f);
+            if (type <= 1)
+            {
+                Instantiate(deer, new Vector3(x, 1.0f, z), Quaternion.identity);
+            }
+            else 
+            {
+                Instantiate(bison, new Vector3(x, 1.0f, z), Quaternion.identity);
+            }
+        }
+    }
     public static float RandomFloat(float min, float max)
     {
         System.Random random = new System.Random();
@@ -111,6 +173,44 @@ public class WorldController : MonoBehaviour
             }
         }
         foreach (GameObject go in bison)
+        {
+            Vector3 diff = go.transform.position - position;
+            float curDistance = diff.sqrMagnitude;
+            if (curDistance < distance && !ReferenceEquals(go, exclude))
+            {
+                closest = go;
+                distance = curDistance;
+            }
+        }
+        return closest;
+    }
+
+    public GameObject FindClosestDeer(Vector3 position)
+    {
+        GameObject[] deer;
+        deer = GameObject.FindGameObjectsWithTag("deer");
+        GameObject closest = null;
+        float distance = Mathf.Infinity;
+        foreach (GameObject go in deer)
+        {
+            Vector3 diff = go.transform.position - position;
+            float curDistance = diff.sqrMagnitude;
+            if (curDistance < distance)
+            {
+                closest = go;
+                distance = curDistance;
+            }
+        }
+        return closest;
+    }
+
+    public GameObject FindNewClosestDeer(Vector3 position, GameObject exclude)
+    {
+        GameObject[] deer;
+        deer = GameObject.FindGameObjectsWithTag("deer");
+        GameObject closest = null;
+        float distance = Mathf.Infinity;
+        foreach (GameObject go in deer)
         {
             Vector3 diff = go.transform.position - position;
             float curDistance = diff.sqrMagnitude;

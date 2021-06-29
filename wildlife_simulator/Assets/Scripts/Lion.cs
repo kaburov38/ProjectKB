@@ -5,17 +5,18 @@ using UnityEngine;
 public class Lion : Carnivore
 {
     // Start is called before the first frame update
-    
+    private GameObject enemy;
     void Start()
     {
         base.Initialize();
-        minRunningSpeed = 5.0f;
-        maxRunningSpeed = 6.5f;
+        minRunningSpeed = 6.0f;
+        maxRunningSpeed = 7.5f;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log(state);
         if (!isSleeping)
         {
             thirst += thirstRate * Time.deltaTime;
@@ -50,12 +51,23 @@ public class Lion : Carnivore
                 //Debug.Log("Eat");
                 Eat();
                 break;
+            case State.Fight:
+                Fight();
+                break;
+            case State.Run:
+                RunAway();
+                break;
         }
     }
 
     void Eat()
     {
+        if(prey == null)
+        {
+            SeekPrey();
+        }
         agent.SetDestination(prey.transform.position);
+        agent.speed -= Time.deltaTime / 10;
         if(agent.remainingDistance <= 3.0f && prey.GetComponent<Animal>().getState() == State.Run)
         {
             Destroy(prey);
@@ -68,12 +80,40 @@ public class Lion : Carnivore
     }
     protected override void WalkAround()
     {
-        base.WalkAround();
-        if (hunger >= 0.8f)
+        agent.SetDestination(destination);
+        float dist = agent.remainingDistance;
+        if (agent.remainingDistance <= 3.0f)
+        {
+            generateNewDestination();
+        }
+        if (thirst >= 0.75f)
+        {
+            water = WorldControllerScript.FindClosestWater(transform.position);
+            water.GetComponent<DrinkingStation>().isAvailable = false;
+            //Debug.Log("drink");
+            state = State.Thirst;
+        }
+        else if (hunger >= 0.8f)
         {
             SeekPrey();
             agent.speed = WorldController.RandomFloat(minRunningSpeed, maxRunningSpeed);
             state = State.Eat;
+        }
+        else if (peeBar >= 1.0f)
+        {
+            //Debug.Log("pee");
+            state = State.Pee;
+        }
+        else if (poopBar >= 1.0f)
+        {
+            //Debug.Log("poop");
+            state = State.Poop;
+        }
+        else if (DayNightScript.isNight())
+        {
+            isSleeping = true;
+            //Debug.Log("sleep");
+            state = State.Sleep;
         }
     }
 
@@ -90,5 +130,49 @@ public class Lion : Carnivore
         afterEat = true;
         agent.speed = 3.5f;
         state = State.Awake;
+    }
+
+    public void LoseFromHyena()
+    {
+        //Debug.Log("run");
+        agent.ResetPath();
+        state = State.Run;
+        agent.speed = 6.0f;
+        generateNewDestination();
+    }
+
+    public void WinFromHyena()
+    {
+        Destroy(enemy);
+        state = State.Awake;
+    }
+
+    public void RunAway()
+    {
+        agent.SetDestination(destination);
+        if (agent.remainingDistance <= 3.0f && !agent.pathPending)
+        {
+            agent.speed = 3.5f;
+            //Debug.Log(agent.remainingDistance);
+            state = State.Awake;
+        }
+    }
+
+    public void FightHyena(GameObject _hyena)
+    {
+        if (state == State.Thirst)
+        {
+            water.GetComponent<DrinkingStation>().isAvailable = true;
+        }
+        if (state != State.Run)
+        {
+            enemy = _hyena;
+            state = State.Fight;
+        }
+    }
+
+    public void Fight()
+    {
+        agent.SetDestination(enemy.transform.position);
     }
 }

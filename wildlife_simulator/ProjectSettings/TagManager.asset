@@ -9,6 +9,10 @@ TagManager:
   - grass
   - deer
   - bison
+  - DayNightCycle
+  - WorldController
+  - lion
+  - hyena
   layers:
   - Default
   - TransparentFX

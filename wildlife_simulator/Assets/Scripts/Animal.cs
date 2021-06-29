@@ -20,8 +20,8 @@ public class Animal : MonoBehaviour
     protected bool isSleeping;
     protected DayNightCycle DayNightScript;
     protected WorldController WorldControllerScript;
-    protected GameObject water;
-    protected int state = State.Awake;
+    public GameObject water;
+    public int state = State.Awake;
 
     public GameObject DayNightController;
     public GameObject WorldControllerObject;
@@ -35,6 +35,8 @@ public class Animal : MonoBehaviour
     public float poopTime;
     protected void Initialize()
     {
+        DayNightController = GameObject.FindGameObjectsWithTag("DayNightCycle")[0];
+        WorldControllerObject = GameObject.FindGameObjectsWithTag("WorldController")[0];
         DayNightScript = DayNightController.GetComponent<DayNightCycle>();
         WorldControllerScript = WorldControllerObject.GetComponent<WorldController>();
         agent = GetComponent<NavMeshAgent>();
@@ -61,19 +63,23 @@ public class Animal : MonoBehaviour
         {
             water = WorldControllerScript.FindClosestWater(transform.position);
             water.GetComponent<DrinkingStation>().isAvailable = false;
+            //Debug.Log("drink");
             state = State.Thirst;
         }
-        if(peeBar >= 1.0f)
+        else if(peeBar >= 1.0f)
         {
+            //Debug.Log("pee");
             state = State.Pee;
         }
-        if(poopBar >= 1.0f)
+        else if(poopBar >= 1.0f)
         {
+            //Debug.Log("poop");
             state = State.Poop;
         }
-        if(DayNightScript.isNight())
+        else if(DayNightScript.isNight())
         {
             isSleeping = true;
+            //Debug.Log("sleep");
             state = State.Sleep;
         }
     }

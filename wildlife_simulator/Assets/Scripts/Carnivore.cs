@@ -19,13 +19,13 @@ public class Carnivore : Animal
         
     }
 
-    public void SeekPrey()
+    public virtual void SeekPrey()
     {
         prey = WorldControllerScript.FindClosestPrey(transform.position);
         prey.GetComponent<Herbivore>().chased(this.gameObject);
     }
 
-    public void SeekNewPrey(GameObject excluded)
+    public virtual void SeekNewPrey(GameObject excluded)
     {
         prey = WorldControllerScript.FindNewClosestPrey(transform.position, excluded);
         prey.GetComponent<Herbivore>().chased(this.gameObject);

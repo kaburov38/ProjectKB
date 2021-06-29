@@ -12,7 +12,10 @@ public class Bison : Herbivore
     {
         base.Initialize();
     }
-
+    private void Awake()
+    {
+        base.Initialize();
+    }
     void FightBack()
     {
         agent.SetDestination(predator.transform.position);
@@ -33,10 +36,11 @@ public class Bison : Herbivore
 
     public override void chased(GameObject _predator)
     {
+        base.chased(_predator);
         predator = _predator;
         state = State.FightBack;
         battlePower = WorldController.RandomFloat(0.0f, 1.0f);
-        Debug.Log(battlePower);
+        //Debug.Log(battlePower);
     }
     // Update is called once per frame
     void Update()
