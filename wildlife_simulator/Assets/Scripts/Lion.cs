@@ -80,11 +80,44 @@ public class Lion : Carnivore
     }
     protected override void WalkAround()
     {
-        agent.SetDestination(destination);
-        float dist = agent.remainingDistance;
-        if (agent.remainingDistance <= 3.0f)
+        if (isIdle)
         {
-            generateNewDestination();
+            agent.isStopped = true;
+            idle_clock += Time.deltaTime;
+            if (idle_clock >= idle_time)
+            {
+                agent.isStopped = false;
+                float temp = WorldController.RandomFloat(0.0f, 1.0f);
+                if (temp <= 0.33)
+                {
+                    isIdle = true;
+                    idle_clock = 0.0f;
+                }
+                else
+                {
+                    generateNewDestination();
+                    isIdle = false;
+                }
+            }
+        }
+        else
+        {
+            agent.SetDestination(destination);
+            float dist = agent.remainingDistance;
+            if (agent.remainingDistance <= 3.0f)
+            {
+                float temp = WorldController.RandomFloat(0.0f, 1.0f);
+                if (temp <= 0.33)
+                {
+                    isIdle = true;
+                    idle_clock = 0.0f;
+                }
+                else
+                {
+                    generateNewDestination();
+                    isIdle = false;
+                }
+            }
         }
         if (thirst >= 0.75f)
         {
@@ -160,6 +193,8 @@ public class Lion : Carnivore
 
     public void FightHyena(GameObject _hyena)
     {
+        if (agent.isStopped)
+            agent.isStopped = false;
         if (state == State.Thirst)
         {
             water.GetComponent<DrinkingStation>().isAvailable = true;

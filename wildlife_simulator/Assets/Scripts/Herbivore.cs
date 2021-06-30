@@ -34,6 +34,8 @@ public class Herbivore : Animal
         {
             grass.GetComponent<DrinkingStation>().isAvailable = true;
         }
+        if (agent.isStopped)
+            agent.isStopped = false;
     }
 
     protected override void WalkAround()

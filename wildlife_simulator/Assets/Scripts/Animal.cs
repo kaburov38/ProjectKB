@@ -20,8 +20,11 @@ public class Animal : MonoBehaviour
     protected bool isSleeping;
     protected DayNightCycle DayNightScript;
     protected WorldController WorldControllerScript;
-    public GameObject water;
-    public int state = State.Awake;
+    protected GameObject water;
+    protected int state = State.Awake;
+    protected bool isIdle = false;
+    protected float idle_time = 4.0f;
+    protected float idle_clock = 0.0f;
 
     public GameObject DayNightController;
     public GameObject WorldControllerObject;
@@ -53,12 +56,45 @@ public class Animal : MonoBehaviour
     }
     protected virtual void WalkAround()
     {
-        agent.SetDestination(destination);
-        float dist = agent.remainingDistance; 
-        if (agent.remainingDistance <= 3.0f)
+        if(isIdle)
         {
-            generateNewDestination();
+            agent.isStopped = true;
+            idle_clock += Time.deltaTime;
+            if(idle_clock >= idle_time)
+            {
+                agent.isStopped = false;
+                float temp = WorldController.RandomFloat(0.0f, 1.0f);
+                if (temp <= 0.33)
+                {
+                    isIdle = true;
+                    idle_clock = 0.0f;
+                }
+                else
+                {
+                    generateNewDestination();
+                    isIdle = false;
+                }
+            }
         }
+        else
+        {
+            agent.SetDestination(destination);
+            float dist = agent.remainingDistance;
+            if (agent.remainingDistance <= 3.0f)
+            {
+                float temp = WorldController.RandomFloat(0.0f, 1.0f);
+                if (temp <= 0.33)
+                {
+                    isIdle = true;
+                    idle_clock = 0.0f;
+                }
+                else
+                {
+                    generateNewDestination();
+                    isIdle = false;
+                }
+            }
+        }        
         if(thirst >= 0.75f)
         {
             water = WorldControllerScript.FindClosestWater(transform.position);
