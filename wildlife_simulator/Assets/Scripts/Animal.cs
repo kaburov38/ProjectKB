@@ -25,6 +25,7 @@ public class Animal : MonoBehaviour
     protected bool isIdle = false;
     protected float idle_time = 4.0f;
     protected float idle_clock = 0.0f;
+    protected Animator anim;
 
     public GameObject DayNightController;
     public GameObject WorldControllerObject;
@@ -48,6 +49,7 @@ public class Animal : MonoBehaviour
         hungerRate = 1.0f / hungerTime;
         peeRate = 1.0f / peeTime;
         poopRate = 1.0f / poopTime;
+        anim = gameObject.GetComponent<Animator>();
     }
 
     public int getState()

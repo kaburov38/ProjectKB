@@ -6,11 +6,13 @@ public class Lion : Carnivore
 {
     // Start is called before the first frame update
     private GameObject enemy;
+    public GameObject child;
     void Start()
     {
         base.Initialize();
         minRunningSpeed = 6.0f;
         maxRunningSpeed = 7.5f;
+        anim = child.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -82,6 +84,7 @@ public class Lion : Carnivore
     {
         if (isIdle)
         {
+            anim.Play("Idle");
             agent.isStopped = true;
             idle_clock += Time.deltaTime;
             if (idle_clock >= idle_time)
@@ -90,11 +93,13 @@ public class Lion : Carnivore
                 float temp = WorldController.RandomFloat(0.0f, 1.0f);
                 if (temp <= 0.33)
                 {
+                    //anim.Play("Idle");
                     isIdle = true;
                     idle_clock = 0.0f;
                 }
                 else
                 {
+                    //anim.Play("Walking");
                     generateNewDestination();
                     isIdle = false;
                 }
@@ -102,6 +107,8 @@ public class Lion : Carnivore
         }
         else
         {
+            anim.SetFloat("movSpeed", agent.speed);
+            anim.Play("Walking");
             agent.SetDestination(destination);
             float dist = agent.remainingDistance;
             if (agent.remainingDistance <= 3.0f)
@@ -109,11 +116,13 @@ public class Lion : Carnivore
                 float temp = WorldController.RandomFloat(0.0f, 1.0f);
                 if (temp <= 0.33)
                 {
+                    //anim.Play("Idle");
                     isIdle = true;
                     idle_clock = 0.0f;
                 }
                 else
                 {
+                    //anim.Play("Walking");
                     generateNewDestination();
                     isIdle = false;
                 }
