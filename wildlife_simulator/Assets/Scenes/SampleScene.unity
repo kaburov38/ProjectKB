@@ -427,7 +427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &125485653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1168,7 +1168,7 @@ MonoBehaviour:
   poopDuration: 2
   peeDuration: 2
   thirstTime: 20
-  hungerTime: 30
+  hungerTime: 30000
   peeTime: 10
   poopTime: 15
   child: {fileID: 919132147765994126}
@@ -1763,7 +1763,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &603230611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2406,7 +2406,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!208 &731248045
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -2771,7 +2771,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132147765994126}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: b235179bd2a63d1468dd430670338c55, type: 3}
+  m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 848b0dc178f66bf4db2e9c8c3873c055, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -3211,7 +3211,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &962658950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3656,7 +3656,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!208 &1084889478
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -5879,7 +5879,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1988319861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6404,7 +6404,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!208 &2050991392
 NavMeshObstacle:
   m_ObjectHideFlags: 0
