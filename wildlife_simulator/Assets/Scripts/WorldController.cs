@@ -28,12 +28,12 @@ public class WorldController : MonoBehaviour
         {
             if(deer <= hyena || deer + bison <= hyena + 1)
             {
-                respawnHerbivore();
+                //respawnHerbivore();
                 clock = 0.0f;
             }
             else
             {
-                respawn();
+                //respawn();
                 clock = 0.0f;
             }
         }

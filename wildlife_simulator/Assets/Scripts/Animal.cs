@@ -132,22 +132,28 @@ public class Animal : MonoBehaviour
     protected void Drink()
     {
         agent.SetDestination(water.transform.position);
-        if (agent.velocity == new Vector3(0.0f, 0.0f, 0.0f))
+        if (agent.velocity == new Vector3(0.0f, 0.0f, 0.0f) && !agent.pathPending)
         {
             drinkClock += Time.deltaTime;
+            //anim.Play("Drink");
+            anim.SetBool("isDrinking", true);
         }
         if (drinkClock >= drinkDuration)
         {
+            //anim.Play("Walking");
             water.GetComponent<DrinkingStation>().isAvailable = true;
             thirst = 0.0f;
             drinkClock = 0.0f;
             afterDrink = true;
+            anim.SetBool("isDrinking", false);
             state = State.Awake;
         }        
     }
 
     protected void Pee()
     {
+        //anim.Play("Pee");
+        anim.SetBool("BuangAir", true);
         agent.isStopped = true;
         peeClock += Time.deltaTime;
         if(peeClock >= peeDuration)
@@ -156,12 +162,15 @@ public class Animal : MonoBehaviour
             peeBar = 0.0f;
             afterDrink = false;
             agent.isStopped = false;
+            anim.SetBool("BuangAir", false);
             state = State.Awake;
         }
     }
 
     protected void Poop()
     {
+        //anim.Play("Pee");
+        anim.SetBool("BuangAir", true);
         agent.isStopped = true;
         poopClock += Time.deltaTime;
         if (poopClock >= poopDuration)
@@ -170,17 +179,21 @@ public class Animal : MonoBehaviour
             poopBar = 0.0f;
             afterEat = false;
             agent.isStopped = false;
+            anim.SetBool("BuangAir", false);
             state = State.Awake;
         }
     }
 
     protected void Sleep()
     {
+        //anim.Play("Sleep");
+        anim.SetBool("isSleeping", true);
         agent.isStopped = true;
         if(!DayNightScript.isNight())
         {
             agent.isStopped = false;
             isSleeping = false;
+            anim.SetBool("isSleeping", false);
             state = State.Awake;
         }
     }
