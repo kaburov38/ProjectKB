@@ -5,14 +5,20 @@ using UnityEngine;
 public class Herbivore : Animal
 {
     protected GameObject grass;
+    protected GameObject Lion;
 
-
+    protected override void Initialize()
+    {
+        base.Initialize();
+        Lion = GameObject.FindGameObjectsWithTag("lion")[0];
+    }
     protected void Eat()
     {
         agent.SetDestination(grass.transform.position);
-        if (agent.velocity == new Vector3(0.0f, 0.0f, 0.0f))
+        if (agent.velocity == Vector3.zero && !agent.pathPending)
         {
             eatClock += Time.deltaTime;
+            anim.SetBool("isEat", true);
         }
         if (eatClock >= eatDuration)
         {
@@ -20,6 +26,7 @@ public class Herbivore : Animal
             hunger = 0.0f;
             eatClock = 0.0f;
             afterEat = true;
+            anim.SetBool("isEat", false);
             state = State.Awake;
         }
     }
@@ -40,13 +47,57 @@ public class Herbivore : Animal
 
     protected override void WalkAround()
     {
-        agent.SetDestination(destination);
-        float dist = agent.remainingDistance;
-        if (agent.remainingDistance <= 3.0f)
+        if (isIdle)
         {
-            generateNewDestination();
+            anim.SetFloat("movSpeed", 0.0f);
+            agent.isStopped = true;
+            idle_clock += Time.deltaTime;
+            if (idle_clock >= idle_time)
+            {
+                agent.isStopped = false;
+                float temp = WorldController.RandomFloat(0.0f, 1.0f);
+                if (temp <= 0.33)
+                {
+                    isIdle = true;
+                    idle_clock = 0.0f;
+                }
+                else
+                {
+                    generateNewDestination();
+                    isIdle = false;
+                }
+            }
         }
-        if (thirst >= 0.75f)
+        else
+        {
+            anim.SetFloat("movSpeed", agent.speed);
+            agent.SetDestination(destination);
+            float dist = agent.remainingDistance;
+            if (agent.remainingDistance <= WorldController.remainingDistance)
+            {
+                float temp = WorldController.RandomFloat(0.0f, 1.0f);
+                if (temp <= 0.33)
+                {
+                    isIdle = true;
+                    idle_clock = 0.0f;
+                }
+                else
+                {
+                    generateNewDestination();
+                    isIdle = false;
+                }
+            }
+        }
+        if(Vector3.Distance(transform.position, Lion.transform.position) <= 15.0f)
+        {
+            Vector3 DirToPlayer = transform.position - Lion.transform.position;
+
+            Vector3 newPos = transform.position + DirToPlayer;
+
+            destination = newPos;
+            agent.SetDestination(destination);
+        }
+        else if (thirst >= 0.75f)
         {
             water = WorldControllerScript.FindClosestWater(transform.position);
             water.GetComponent<DrinkingStation>().isAvailable = false;

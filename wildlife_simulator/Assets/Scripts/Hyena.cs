@@ -66,7 +66,7 @@ public class Hyena : Carnivore
             SeekPrey();
         }
         agent.SetDestination(prey.transform.position);
-        if(agent.remainingDistance <= 3.0f && prey.GetComponent<Animal>().getState() == State.Run)
+        if(agent.remainingDistance <= WorldController.remainingDistance && prey.GetComponent<Animal>().getState() == State.Run)
         {
             Destroy(prey);
             hunger = 0.0f;
@@ -79,7 +79,7 @@ public class Hyena : Carnivore
     public void FightLion()
     {
         agent.SetDestination(lion.transform.position);
-        if (agent.remainingDistance <= 3.0f)
+        if (agent.remainingDistance <= WorldController.remainingDistance)
         {
             if (battlePower >= victoryPower)
             {
@@ -94,15 +94,18 @@ public class Hyena : Carnivore
     }
     protected override void WalkAround()
     {
+
         if (isIdle)
         {
+            anim.SetFloat("movSpeed", 0.0f);
+            //anim.Play("Idle");
             agent.isStopped = true;
             idle_clock += Time.deltaTime;
             if (idle_clock >= idle_time)
             {
                 agent.isStopped = false;
                 float temp = WorldController.RandomFloat(0.0f, 1.0f);
-                if (temp <= 0.33)
+                if (temp <= 0.0f)
                 {
                     isIdle = true;
                     idle_clock = 0.0f;
@@ -116,12 +119,14 @@ public class Hyena : Carnivore
         }
         else
         {
+            anim.SetFloat("movSpeed", agent.speed);
+            //anim.Play("Walking");
             agent.SetDestination(destination);
             float dist = agent.remainingDistance;
-            if (agent.remainingDistance <= 3.0f)
+            if (agent.remainingDistance <= WorldController.remainingDistance)
             {
                 float temp = WorldController.RandomFloat(0.0f, 1.0f);
-                if (temp <= 0.33)
+                if (temp <= 0.0f)
                 {
                     isIdle = true;
                     idle_clock = 0.0f;

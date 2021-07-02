@@ -6,13 +6,11 @@ public class Lion : Carnivore
 {
     // Start is called before the first frame update
     private GameObject enemy;
-    public GameObject child;
     void Start()
     {
         base.Initialize();
         minRunningSpeed = 6.0f;
         maxRunningSpeed = 7.5f;
-        anim = child.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -70,7 +68,7 @@ public class Lion : Carnivore
         }
         agent.SetDestination(prey.transform.position);
         agent.speed -= Time.deltaTime / 10;
-        if(agent.remainingDistance <= 3.0f && prey.GetComponent<Animal>().getState() == State.Run)
+        if(agent.remainingDistance <= WorldController.remainingDistance && prey.GetComponent<Animal>().getState() == State.Run)
         {
             Destroy(prey);
             hunger = 0.0f;
@@ -92,7 +90,7 @@ public class Lion : Carnivore
             {
                 agent.isStopped = false;
                 float temp = WorldController.RandomFloat(0.0f, 1.0f);
-                if (temp <= 0.33)
+                if (temp <= 0.0f)
                 {
                     isIdle = true;
                     idle_clock = 0.0f;
@@ -110,10 +108,10 @@ public class Lion : Carnivore
             //anim.Play("Walking");
             agent.SetDestination(destination);
             float dist = agent.remainingDistance;
-            if (agent.remainingDistance <= 3.0f)
+            if (agent.remainingDistance <= WorldController.remainingDistance)
             {
                 float temp = WorldController.RandomFloat(0.0f, 1.0f);
-                if (temp <= 0.33)
+                if (temp <= 0.0f)
                 {
                     isIdle = true;
                     idle_clock = 0.0f;
@@ -189,7 +187,7 @@ public class Lion : Carnivore
     public void RunAway()
     {
         agent.SetDestination(destination);
-        if (agent.remainingDistance <= 3.0f && !agent.pathPending)
+        if (agent.remainingDistance <= WorldController.remainingDistance && !agent.pathPending)
         {
             agent.speed = 3.5f;
             //Debug.Log(agent.remainingDistance);
@@ -215,5 +213,21 @@ public class Lion : Carnivore
     public void Fight()
     {
         agent.SetDestination(enemy.transform.position);
+    }
+
+    protected override void Sleep()
+    {
+        //anim.Play("Sleep");
+        anim.SetBool("isSleeping", true);
+        transform.position = new Vector3(transform.position.x, transform.position.y - 1, transform.position.z);
+        agent.isStopped = true;
+        if (!DayNightScript.isNight())
+        {
+            agent.isStopped = false;
+            isSleeping = false;
+            anim.SetBool("isSleeping", false);
+            transform.position = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+            state = State.Awake;
+        }
     }
 }

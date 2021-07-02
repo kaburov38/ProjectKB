@@ -19,7 +19,7 @@ public class Bison : Herbivore
     void FightBack()
     {
         agent.SetDestination(predator.transform.position);
-        if(agent.remainingDistance <= 3.0f)
+        if(agent.remainingDistance <= WorldController.remainingDistance)
         {
             if(battlePower >= victoryPower)
             {

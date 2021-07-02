@@ -20,7 +20,7 @@ public class Animal : MonoBehaviour
     protected bool isSleeping;
     protected DayNightCycle DayNightScript;
     protected WorldController WorldControllerScript;
-    protected GameObject water;
+    protected GameObject water; 
     protected int state = State.Awake;
     protected bool isIdle = false;
     protected float idle_time = 4.0f;
@@ -37,7 +37,7 @@ public class Animal : MonoBehaviour
     public float hungerTime;
     public float peeTime;
     public float poopTime;
-    protected void Initialize()
+    protected virtual void Initialize()
     {
         DayNightController = GameObject.FindGameObjectsWithTag("DayNightCycle")[0];
         WorldControllerObject = GameObject.FindGameObjectsWithTag("WorldController")[0];
@@ -58,102 +58,102 @@ public class Animal : MonoBehaviour
     }
     protected virtual void WalkAround()
     {
-        if(isIdle)
-        {
-            agent.isStopped = true;
-            idle_clock += Time.deltaTime;
-            if(idle_clock >= idle_time)
-            {
-                agent.isStopped = false;
-                float temp = WorldController.RandomFloat(0.0f, 1.0f);
-                if (temp <= 0.33)
-                {
-                    isIdle = true;
-                    idle_clock = 0.0f;
-                }
-                else
-                {
-                    generateNewDestination();
-                    isIdle = false;
-                }
-            }
-        }
-        else
-        {
-            agent.SetDestination(destination);
-            float dist = agent.remainingDistance;
-            if (agent.remainingDistance <= 3.0f)
-            {
-                float temp = WorldController.RandomFloat(0.0f, 1.0f);
-                if (temp <= 0.33)
-                {
-                    isIdle = true;
-                    idle_clock = 0.0f;
-                }
-                else
-                {
-                    generateNewDestination();
-                    isIdle = false;
-                }
-            }
-        }        
-        if(thirst >= 0.75f)
-        {
-            water = WorldControllerScript.FindClosestWater(transform.position);
-            water.GetComponent<DrinkingStation>().isAvailable = false;
-            //Debug.Log("drink");
-            state = State.Thirst;
-        }
-        else if(peeBar >= 1.0f)
-        {
-            //Debug.Log("pee");
-            state = State.Pee;
-        }
-        else if(poopBar >= 1.0f)
-        {
-            //Debug.Log("poop");
-            state = State.Poop;
-        }
-        else if(DayNightScript.isNight())
-        {
-            isSleeping = true;
-            //Debug.Log("sleep");
-            state = State.Sleep;
-        }
+        //if(isIdle)
+        //{
+        //    anim.SetFloat("movSpeed", 0.0f);
+        //    agent.isStopped = true;
+        //    idle_clock += Time.deltaTime;
+        //    if(idle_clock >= idle_time)
+        //    {
+        //        agent.isStopped = false;
+        //        float temp = WorldController.RandomFloat(0.0f, 1.0f);
+        //        if (temp <= 0.33)
+        //        {
+        //            isIdle = true;
+        //            idle_clock = 0.0f;
+        //        }
+        //        else
+        //        {
+        //            generateNewDestination();
+        //            isIdle = false;
+        //        }
+        //    }
+        //}
+        //else
+        //{
+        //    anim.SetFloat("movSpeed", agent.speed);
+        //    agent.SetDestination(destination);
+        //    float dist = agent.remainingDistance;
+        //    if (agent.remainingDistance <= WorldController.remainingDistance)
+        //    {
+        //        float temp = WorldController.RandomFloat(0.0f, 1.0f);
+        //        if (temp <= 0.33)
+        //        {
+        //            isIdle = true;
+        //            idle_clock = 0.0f;
+        //        }
+        //        else
+        //        {
+        //            generateNewDestination();
+        //            isIdle = false;
+        //        }
+        //    }
+        //}        
+        //if(thirst >= 0.75f)
+        //{
+        //    water = WorldControllerScript.FindClosestWater(transform.position);
+        //    water.GetComponent<DrinkingStation>().isAvailable = false;
+        //    //Debug.Log("drink");
+        //    state = State.Thirst;
+        //}
+        //else if(peeBar >= 1.0f)
+        //{
+        //    //Debug.Log("pee");
+        //    state = State.Pee;
+        //}
+        //else if(poopBar >= 1.0f)
+        //{
+        //    //Debug.Log("poop");
+        //    state = State.Poop;
+        //}
+        //else if(DayNightScript.isNight())
+        //{
+        //    isSleeping = true;
+        //    //Debug.Log("sleep");
+        //    state = State.Sleep;
+        //}
     }
 
     protected void generateNewDestination()
     {
-        destination.x = Random.Range(-40, 40); 
+        destination.x = Random.Range(-200, 200); 
         destination.y = 1.0f;
-        destination.z = Random.Range(-40, 25);
+        destination.z = Random.Range(-200, 200);        
     }
 
     protected void Drink()
     {
         agent.SetDestination(water.transform.position);
-        if (agent.velocity == new Vector3(0.0f, 0.0f, 0.0f) && !agent.pathPending)
+        if (agent.velocity == Vector3.zero && !agent.pathPending)
         {
             drinkClock += Time.deltaTime;
-            //anim.Play("Drink");
-            anim.SetBool("isDrinking", true);
+            anim.SetBool("isDrink", true);
         }
         if (drinkClock >= drinkDuration)
         {
-            //anim.Play("Walking");
             water.GetComponent<DrinkingStation>().isAvailable = true;
             thirst = 0.0f;
             drinkClock = 0.0f;
             afterDrink = true;
-            anim.SetBool("isDrinking", false);
+            anim.SetBool("isDrink", false);
             state = State.Awake;
-        }        
+        }
     }
 
     protected void Pee()
     {
         //anim.Play("Pee");
-        anim.SetBool("BuangAir", true);
+        anim.SetBool("isPee", true);
         agent.isStopped = true;
         peeClock += Time.deltaTime;
         if(peeClock >= peeDuration)
@@ -162,7 +162,7 @@ public class Animal : MonoBehaviour
             peeBar = 0.0f;
             afterDrink = false;
             agent.isStopped = false;
-            anim.SetBool("BuangAir", false);
+            anim.SetBool("isPee", false);
             state = State.Awake;
         }
     }
@@ -170,7 +170,7 @@ public class Animal : MonoBehaviour
     protected void Poop()
     {
         //anim.Play("Pee");
-        anim.SetBool("BuangAir", true);
+        anim.SetBool("isPoo", true);
         agent.isStopped = true;
         poopClock += Time.deltaTime;
         if (poopClock >= poopDuration)
@@ -179,12 +179,12 @@ public class Animal : MonoBehaviour
             poopBar = 0.0f;
             afterEat = false;
             agent.isStopped = false;
-            anim.SetBool("BuangAir", false);
+            anim.SetBool("isPoo", false);
             state = State.Awake;
         }
     }
 
-    protected void Sleep()
+    protected virtual void Sleep()
     {
         //anim.Play("Sleep");
         anim.SetBool("isSleeping", true);

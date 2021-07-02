@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WorldController : MonoBehaviour
 {
+    public static float remainingDistance = 7.0f;
     public GameObject deer;
     public GameObject bison;
     public GameObject hyena;
@@ -28,17 +29,17 @@ public class WorldController : MonoBehaviour
         {
             if(deer <= hyena)
             {
-                //respawnDeer();
+                respawnDeer();
                 clock = 0.0f;
             }
             else if(deer + bison <= hyena + 1)
             {
-                //respawnHerbivore();
+                respawnHerbivore();
                 clock = 0.0f;
             }
             else
             {
-                //respawn();
+                respawn();
                 clock = 0.0f;
             }
         }
@@ -49,8 +50,8 @@ public class WorldController : MonoBehaviour
         int count = Random.Range(1, 3);
         for (int i = 0; i < count; i++)
         {
-            float x = Random.Range(-50.0f, 50.0f);
-            float z = Random.Range(-50.0f, 20.0f);
+            float x = Random.Range(-200.0f, 200.0f);
+            float z = Random.Range(-200.0f, 200.0f);
             Instantiate(deer, new Vector3(x, 1.0f, z), Quaternion.identity);
         }
     }
@@ -60,9 +61,9 @@ public class WorldController : MonoBehaviour
         for(int i = 0;i < count;i++)
         {
             int type = Random.Range(0, 5);
-            float x = Random.Range(-50.0f, 50.0f);
-            float z = Random.Range(-50.0f, 20.0f);
-            if(type <= 2)
+            float x = Random.Range(-200.0f, 200.0f);
+            float z = Random.Range(-200.0f, 200.0f);
+            if (type <= 2)
             {
                 Instantiate(deer, new Vector3(x, 1.0f, z), Quaternion.identity);
             }
@@ -82,8 +83,8 @@ public class WorldController : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             int type = Random.Range(0, 3);
-            float x = Random.Range(-50.0f, 50.0f);
-            float z = Random.Range(-50.0f, 20.0f);
+            float x = Random.Range(-200.0f, 200.0f);
+            float z = Random.Range(-200.0f, 200.0f);
             if (type <= 1)
             {
                 Instantiate(deer, new Vector3(x, 1.0f, z), Quaternion.identity);
