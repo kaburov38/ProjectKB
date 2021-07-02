@@ -26,7 +26,12 @@ public class WorldController : MonoBehaviour
         int hyena = GameObject.FindGameObjectsWithTag("hyena").Length;
         if (clock >= 20.0f && bison+deer+hyena+1 <= drinking_station - 3 && bison+deer <= grass - 3)
         {
-            if(deer <= hyena || deer + bison <= hyena + 1)
+            if(deer <= hyena)
+            {
+                //respawnDeer();
+                clock = 0.0f;
+            }
+            else if(deer + bison <= hyena + 1)
             {
                 //respawnHerbivore();
                 clock = 0.0f;
@@ -36,6 +41,17 @@ public class WorldController : MonoBehaviour
                 //respawn();
                 clock = 0.0f;
             }
+        }
+    }
+
+    public void respawnDeer()
+    {
+        int count = Random.Range(1, 3);
+        for (int i = 0; i < count; i++)
+        {
+            float x = Random.Range(-50.0f, 50.0f);
+            float z = Random.Range(-50.0f, 20.0f);
+            Instantiate(deer, new Vector3(x, 1.0f, z), Quaternion.identity);
         }
     }
     public void respawn()
@@ -62,7 +78,7 @@ public class WorldController : MonoBehaviour
     }
     public void respawnHerbivore()
     {
-        int count = Random.Range(0, 3);
+        int count = Random.Range(1, 3);
         for (int i = 0; i < count; i++)
         {
             int type = Random.Range(0, 3);
