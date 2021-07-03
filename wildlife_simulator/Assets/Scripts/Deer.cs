@@ -5,10 +5,10 @@ using UnityEngine.AI;
 
 public class Deer : Herbivore
 {
-    private float RunDistance = 10.0f;
+    private float RunDistance = 12.0f;
     private bool isRunning = false;
-    private float minRunningSpeed = 4.0f;
-    private float maxRunningSpeed = 6.0f;
+    private float minRunningSpeed = 5.5f;
+    private float maxRunningSpeed = 6.75f;
 
     protected GameObject predator;
     // Start is called before the first frame update

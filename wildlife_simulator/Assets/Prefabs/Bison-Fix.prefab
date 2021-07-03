@@ -826,7 +826,7 @@ GameObject:
   - component: {fileID: 1341658115260527225}
   m_Layer: 0
   m_Name: Bison-Fix
-  m_TagString: Untagged
+  m_TagString: bison
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
